@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { Bell, Lock, Menu, X } from 'lucide-react';
 
-const BASE_NAV_ITEMS = ['Dashboard', 'Deepfake', 'ThreatGuard', 'Threats', 'Steganography', 'AI', 'Logs', 'News', 'Community', 'Settings'];
+const BASE_NAV_ITEMS = ['Dashboard', 'ThreatGuard', 'Steganography', 'Deepfake', 'Logs', 'News', 'Community', 'Settings'];
 
 export default function Navbar({ activePage, setActivePage, user, profile, onLogout }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

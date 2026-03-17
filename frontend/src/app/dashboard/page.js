@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Navbar';
 import dynamic from 'next/dynamic';
@@ -63,16 +63,57 @@ export default function DashboardPage() {
   const [activePage, setActivePage] = useState('Dashboard');
   const { currentUser, userProfile, logout, loading, needsOnboarding } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const PAGE_VIEW_MAP = {
+    Dashboard: DashboardView,
+    Deepfake: DeepfakeView,
+    ThreatGuard: PhishingView,
+    Threats: ThreatMonitorView,
+    Steganography: SteganographyView,
+    AI: AIAnalysisView,
+    Logs: LogsView,
+    News: NewsView,
+    Community: CommunityView,
+    Users: UsersView,
+    Settings: SettingsView,
+  };
+
+  const PAGE_ALIASES = {
+    ThreatMonitor: 'Threats',
+    Ai: 'AI',
+  };
+
+  const normalizePage = (page) => {
+    if (!page) return 'Dashboard';
+    const decoded = decodeURIComponent(String(page)).trim();
+    const resolved = PAGE_ALIASES[decoded] || decoded;
+    return Object.prototype.hasOwnProperty.call(PAGE_VIEW_MAP, resolved) ? resolved : 'Dashboard';
+  };
 
   useEffect(() => {
     if (!loading && !currentUser) {
-      router.push('/login');
+      router.replace('/login');
       return;
     }
     if (!loading && currentUser && needsOnboarding) {
-      router.push('/onboarding');
+      router.replace('/onboarding');
     }
   }, [currentUser, loading, needsOnboarding, router]);
+
+  useEffect(() => {
+    const requestedPage = normalizePage(searchParams.get('page'));
+    if (requestedPage !== activePage) {
+      setActivePage(requestedPage);
+    }
+  }, [searchParams, activePage]);
+
+  useEffect(() => {
+    const urlPage = normalizePage(searchParams.get('page'));
+    if (urlPage !== activePage) {
+      router.replace(`/dashboard?page=${encodeURIComponent(activePage)}`);
+    }
+  }, [activePage, searchParams, router]);
 
   if (loading || !currentUser || needsOnboarding) {
     return (
@@ -85,20 +126,8 @@ export default function DashboardPage() {
   }
 
   const renderActivePage = () => {
-    switch (activePage) {
-      case 'Dashboard': return <DashboardView />;
-      case 'Deepfake': return <DeepfakeView />;
-      case 'ThreatGuard': return <PhishingView />;
-      case 'Threats': return <ThreatMonitorView />;
-      case 'Steganography': return <SteganographyView />;
-      case 'AI': return <AIAnalysisView />;
-      case 'Logs': return <LogsView />;
-      case 'News': return <NewsView />;
-      case 'Community': return <CommunityView />;
-      case 'Users': return <UsersView />;
-      case 'Settings': return <SettingsView />;
-      default: return <DashboardView />;
-    }
+    const ActiveView = PAGE_VIEW_MAP[activePage] || DashboardView;
+    return <ActiveView />;
   };
 
   return (
