@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Navbar';
@@ -71,7 +71,6 @@ function DashboardLoadingScreen() {
 }
 
 function DashboardPageContent() {
-  const [activePage, setActivePage] = useState('Dashboard');
   const { currentUser, userProfile, logout, loading, needsOnboarding } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -102,6 +101,8 @@ function DashboardPageContent() {
     return Object.prototype.hasOwnProperty.call(PAGE_VIEW_MAP, resolved) ? resolved : 'Dashboard';
   };
 
+  const activePage = normalizePage(searchParams.get('page'));
+
   useEffect(() => {
     if (!loading && !currentUser) {
       router.replace('/login');
@@ -112,19 +113,11 @@ function DashboardPageContent() {
     }
   }, [currentUser, loading, needsOnboarding, router]);
 
-  useEffect(() => {
-    const requestedPage = normalizePage(searchParams.get('page'));
-    if (requestedPage !== activePage) {
-      setActivePage(requestedPage);
-    }
-  }, [searchParams, activePage]);
-
-  useEffect(() => {
-    const urlPage = normalizePage(searchParams.get('page'));
-    if (urlPage !== activePage) {
-      router.replace(`/dashboard?page=${encodeURIComponent(activePage)}`);
-    }
-  }, [activePage, searchParams, router]);
+  const setActivePage = (nextPage) => {
+    const normalizedNext = normalizePage(nextPage);
+    if (normalizedNext === activePage) return;
+    router.replace(`/dashboard?page=${encodeURIComponent(normalizedNext)}`);
+  };
 
   if (loading || !currentUser || needsOnboarding) {
     return <DashboardLoadingScreen />;
