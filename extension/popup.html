@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hello World Extension</title>
+  <title>Phishing Email Checker</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
@@ -11,14 +11,15 @@
     <div class="glow-orb"></div>
     <div class="content">
       <div class="icon-wrapper">
-        <span class="wave-emoji">👋</span>
+        <span class="shield-icon">!</span>
       </div>
-      <h1>Hello, World!</h1>
-      <p class="subtitle">Your Chrome Extension is running</p>
+      <h1>Phishing Email Checker</h1>
+      <p class="subtitle">Check the open Gmail message</p>
       <div class="divider"></div>
-      <p class="info">Welcome to your first extension. Click the button below to say hello!</p>
-      <button id="greet-btn">Say Hello</button>
+      <p class="info">Open an email in Gmail, then click the button to analyze it.</p>
+      <button id="analyze-btn">Check Current Email</button>
       <p id="message" class="message"></p>
+      <div id="result" class="result" aria-live="polite"></div>
     </div>
   </div>
   <script src="popup.js"></script>

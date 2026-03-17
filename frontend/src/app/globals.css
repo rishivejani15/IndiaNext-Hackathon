@@ -1,0 +1,337 @@
+@import "tailwindcss";
+
+@theme {
+  --color-neon-green: #00ff41;
+  --color-dark-green: #002209;
+  --color-dark-surface: #0a0a0f;
+  --color-card-bg: #0d0d0f;
+  --color-card-border: #1a1a24;
+  
+  --font-sans: var(--font-inter);
+}
+
+@layer base {
+  :root {
+    --background: #000000;
+    --foreground: #ffffff;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply antialiased overflow-x-hidden font-sans;
+  }
+}
+
+@layer utilities {
+  .text-glow-green {
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.5), 0 0 20px rgba(0, 255, 65, 0.3);
+  }
+
+  .bg-glow-green {
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.4), inset 0 0 10px rgba(0, 255, 65, 0.2);
+  }
+  
+  .border-glow-green {
+    border-color: rgba(0, 255, 65, 0.8);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+  }
+}
+
+/* ===== CYBERSECURITY ATMOSPHERE ===== */
+
+/* Grid overlay */
+.cyber-grid {
+  background-image:
+    linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Scanning line that sweeps down the page */
+.scan-line::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 255, 65, 0.0) 20%,
+    rgba(0, 255, 65, 0.5) 50%,
+    rgba(0, 255, 65, 0.0) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.3), 0 0 40px rgba(0, 255, 65, 0.15);
+  animation: scanDown 6s ease-in-out infinite;
+  z-index: 50;
+  pointer-events: none;
+}
+
+@keyframes scanDown {
+  0%, 100% { top: -5px; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { top: 100vh; opacity: 0; }
+}
+
+/* Matrix-style binary rain columns */
+.matrix-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.matrix-rain .col {
+  position: absolute;
+  top: -100vh;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  line-height: 1.4;
+  color: #00ff41;
+  opacity: 0.15;
+  writing-mode: vertical-lr;
+  letter-spacing: 4px;
+  animation: rain linear infinite;
+}
+
+@keyframes rain {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(200vh); }
+}
+
+/* Glitch effect for headings */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.glitch::before {
+  left: 2px;
+  text-shadow: -2px 0 #ff0000;
+  clip-path: inset(0 0 0 0);
+  animation: glitch-shift 4s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+  left: -2px;
+  text-shadow: 2px 0 #0000ff;
+  clip-path: inset(0 0 0 0);
+  animation: glitch-shift 3s infinite linear alternate;
+}
+
+@keyframes glitch-shift {
+  0%, 92%, 100% { clip-path: inset(0 0 100% 0); }
+  93% { clip-path: inset(40% 0 20% 0); }
+  94% { clip-path: inset(80% 0 0 0); }
+  95% { clip-path: inset(10% 0 70% 0); }
+  96% { clip-path: inset(50% 0 30% 0); }
+  97% { clip-path: inset(20% 0 60% 0); }
+  98% { clip-path: inset(70% 0 10% 0); }
+}
+
+/* Threat ticker tape */
+.threat-ticker {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.threat-ticker-content {
+  display: inline-block;
+  animation: ticker 30s linear infinite;
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Pulse ring animation */
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+/* Typing cursor blink */
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink-cursor 1s step-end infinite;
+}
+
+/* ===== KAVACH DASHBOARD STYLES ===== */
+/* These classes are used exclusively by the dashboard views in src/views/ */
+
+:root {
+  --neon: #00FF9C;
+  --black: #0B0B0B;
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(0, 255, 156, 0.18);
+}
+
+/* Glass Card */
+.glass-card {
+  background: rgba(18, 18, 18, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+}
+
+.glass-card:hover {
+  border-color: rgba(0, 255, 156, 0.4);
+  box-shadow: 0 0 24px rgba(0, 255, 156, 0.15);
+  transition: all 0.3s ease;
+}
+
+/* Neon text */
+.neon-text {
+  color: #00FF9C;
+  text-shadow: 0 0 10px rgba(0,255,156,0.8), 0 0 20px rgba(0,255,156,0.4);
+}
+
+.neon-text-sm {
+  color: #00FF9C;
+  text-shadow: 0 0 6px rgba(0,255,156,0.6);
+}
+
+/* Neon border */
+.neon-border {
+  border: 1px solid #00FF9C;
+  box-shadow: 0 0 12px rgba(0,255,156,0.4), inset 0 0 12px rgba(0,255,156,0.05);
+}
+
+/* Scan animation for cards */
+.scan-effect {
+  position: relative;
+  overflow: hidden;
+}
+.scan-effect::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00FF9C, transparent);
+  animation: dashScanLine 4s ease-in-out infinite;
+}
+
+@keyframes dashScanLine {
+  0% { top: -2px; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Radar animation */
+.radar-sweep {
+  position: relative;
+  overflow: hidden;
+}
+.radar-sweep::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(0,255,156,0.25) 60deg, transparent 60deg);
+  animation: radarSpin 3s linear infinite;
+  border-radius: 50%;
+}
+
+@keyframes radarSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Pulse border */
+@keyframes dashBorderPulse {
+  0%, 100% { border-color: rgba(0,255,156,0.2); box-shadow: 0 0 8px rgba(0,255,156,0.2); }
+  50% { border-color: rgba(0,255,156,0.7); box-shadow: 0 0 20px rgba(0,255,156,0.5); }
+}
+.pulse-border {
+  animation: dashBorderPulse 2.5s ease-in-out infinite;
+}
+
+/* Nav button glow (dashboard navbar) */
+.nav-btn {
+  position: relative;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 10px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.02);
+  color: #9ca3af;
+  cursor: pointer;
+}
+.nav-btn:hover {
+  color: #00FF9C;
+  border-color: rgba(0,255,156,0.6);
+  box-shadow: 0 0 16px rgba(0,255,156,0.3), inset 0 0 10px rgba(0,255,156,0.05);
+  background: rgba(0,255,156,0.07);
+  text-shadow: 0 0 8px rgba(0,255,156,0.8);
+}
+.nav-btn.active {
+  color: #00FF9C;
+  border-color: #00FF9C;
+  box-shadow: 0 0 20px rgba(0,255,156,0.5), inset 0 0 15px rgba(0,255,156,0.08);
+  background: rgba(0,255,156,0.08);
+  text-shadow: 0 0 10px rgba(0,255,156,0.9);
+}
+
+/* Kavach green color token */
+.text-kavach-green { color: #00FF9C; }
+.bg-kavach-green { background-color: #00FF9C; }
+.border-kavach-green { border-color: #00FF9C; }
+
+/* Status dot pulse */
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.3); }
+}
+.status-dot {
+  animation: statusPulse 1.5s ease-in-out infinite;
+}
+
+/* Gradient text (dashboard) */
+.gradient-text {
+  background: linear-gradient(135deg, #00FF9C, #00B4D8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Floating particle dots animation */
+@keyframes particle {
+  0%   { transform: translateY(0px)   translateX(0px);  opacity: 0.8; }
+  50%  { transform: translateY(-40px) translateX(15px); opacity: 0.4; }
+  100% { transform: translateY(-80px) translateX(30px); opacity: 0; }
+}

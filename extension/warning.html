@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Blocked</title>
+  <link rel="stylesheet" href="warning.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <div class="badge">Blocked</div>
+      <h1>Unsafe site detected</h1>
+      <p class="subtitle">Navigation was stopped to protect you.</p>
+      <div class="details">
+        <div>
+          <span class="label">URL</span>
+          <span id="blocked-url" class="value"></span>
+        </div>
+        <div>
+          <span class="label">Severity</span>
+          <span id="blocked-severity" class="value">Unknown</span>
+        </div>
+        <div>
+          <span class="label">Score</span>
+          <span id="blocked-score" class="value">N/A</span>
+        </div>
+      </div>
+      <p class="hint">If you trust this site, close this tab and try again later.</p>
+    </div>
+  </div>
+  <script src="warning.js"></script>
+</body>
+</html>

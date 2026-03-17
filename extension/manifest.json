@@ -1,8 +1,32 @@
 {
   "manifest_version": 3,
-  "name": "Hello World Extension",
+  "name": "URL Checker Extension",
   "version": "1.0.0",
-  "description": "A beautiful Hello World Chrome Extension",
+  "description": "A beautiful URL Checker Chrome Extension",
+  "permissions": [
+    "scripting",
+    "tabs",
+    "webNavigation",
+    "downloads",
+    "notifications",
+    "storage",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "https://rudraaaa76-kavach-endpoints.hf.space/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["contentScript.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
