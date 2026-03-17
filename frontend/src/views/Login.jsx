@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, User, Shield, ChevronDown, Chrome, AlertCircle } from 'lucide-react';
+import { Mail, Lock, User, ChevronDown, Chrome, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Login({ onSwitchToSignup }) {
@@ -46,17 +46,15 @@ export default function Login({ onSwitchToSignup }) {
         animate={{ opacity: 1, y: 0 }}
         className="glass-card neon-border p-10 w-full max-w-2xl relative overflow-hidden"
       >
-        <div className="absolute top-0 right-0 p-4 opacity-10">
-          <Shield size={120} className="text-neon" />
+        <div className="absolute top-2 right-2 opacity-10 pointer-events-none">
+          <img src="/kavach-logo.svg" alt="Kavach" className="w-28 h-28 object-contain" />
         </div>
 
         <div className="relative z-10">
           <div className="flex flex-col items-center mb-8">
-            <div className="w-16 h-16 rounded-xl border border-neon/30 flex items-center justify-center mb-4 bg-neon/5 pulse-border">
-              <Shield className="text-neon" size={32} />
-            </div>
-            <h1 className="font-orbitron text-2xl font-bold tracking-widest gradient-text">KAVACH AI</h1>
-            <p className="text-gray-400 text-xs mt-1 font-orbitron tracking-tighter">SECURE ACCESS PROTOCOL</p>
+            <img src="/kavach-logo.svg" alt="Kavach logo" className="w-20 h-20 mb-4 object-contain drop-shadow-[0_0_18px_rgba(0,255,156,0.35)]" />
+            <h1 className="font-heading text-2xl font-bold tracking-widest text-kavach-green">KAVACH</h1>
+            <p className="text-gray-400 text-xs mt-1 font-heading tracking-tighter">SECURE ACCESS PROTOCOL</p>
           </div>
 
           {error && (
@@ -74,7 +72,7 @@ export default function Login({ onSwitchToSignup }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-[10px] font-orbitron text-gray-500 uppercase tracking-[0.2em] mb-2 ml-1">
+                  <label className="block text-[10px] font-heading text-gray-500 uppercase tracking-[0.2em] mb-2 ml-1">
                     Access Identity
                   </label>
                   <div className="relative">
@@ -97,7 +95,7 @@ export default function Login({ onSwitchToSignup }) {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-orbitron text-gray-500 uppercase tracking-[0.2em] mb-2 ml-1">
+                  <label className="block text-[10px] font-heading text-gray-500 uppercase tracking-[0.2em] mb-2 ml-1">
                     Email Address
                   </label>
                   <div className="relative">
@@ -119,7 +117,7 @@ export default function Login({ onSwitchToSignup }) {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-[10px] font-orbitron text-gray-500 uppercase tracking-[0.2em] mb-2 ml-1">
+                  <label className="block text-[10px] font-heading text-gray-500 uppercase tracking-[0.2em] mb-2 ml-1">
                     Access Password
                   </label>
                   <div className="relative">
@@ -142,7 +140,7 @@ export default function Login({ onSwitchToSignup }) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-neon/10 border border-neon/50 text-neon font-orbitron text-xs tracking-widest py-3.5 rounded-lg hover:bg-neon/20 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-neon/10 uppercase disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-neon/10 border border-neon/50 text-neon font-heading text-xs tracking-widest py-3.5 rounded-lg hover:bg-neon/20 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-neon/10 uppercase disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? 'Processing...' : 'Initialize Session'}
                   </button>
@@ -155,7 +153,7 @@ export default function Login({ onSwitchToSignup }) {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-white/5"></div>
             </div>
-            <div className="relative flex justify-center text-[10px] uppercase font-orbitron tracking-widest">
+            <div className="relative flex justify-center text-[10px] uppercase font-heading tracking-widest">
               <span className="bg-[#121212] px-4 text-gray-500">OR PROVIDE EXTERNAL SYNC</span>
             </div>
           </div>
@@ -164,7 +162,7 @@ export default function Login({ onSwitchToSignup }) {
             type="button"
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full bg-white/5 border border-white/10 text-gray-300 font-orbitron text-[10px] tracking-widest py-3 rounded-lg hover:bg-white/10 transition-all flex items-center justify-center gap-3 uppercase disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-white/5 border border-white/10 text-gray-300 font-heading text-[10px] tracking-widest py-3 rounded-lg hover:bg-white/10 transition-all flex items-center justify-center gap-3 uppercase disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Chrome size={16} className="text-neon" />
             Integrate with Google
@@ -174,7 +172,7 @@ export default function Login({ onSwitchToSignup }) {
             New operative?{' '}
             <button
               onClick={onSwitchToSignup}
-              className="text-neon hover:underline cursor-pointer font-orbitron tracking-tighter"
+              className="text-neon hover:underline cursor-pointer font-heading tracking-tighter"
             >
               REGISTER CREDENTIALS
             </button>
@@ -184,3 +182,4 @@ export default function Login({ onSwitchToSignup }) {
     </div>
   );
 }
+

@@ -32,11 +32,11 @@ function PageAmbientParallax() {
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       <motion.div
         style={{ y: upperGlowY }}
-        className="absolute -left-32 top-24 h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(0,255,65,0.14)_0%,rgba(0,255,65,0.04)_38%,transparent_72%)] blur-3xl"
+        className="absolute -left-32 top-24 h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(0,255,156,0.14)_0%,rgba(0,255,156,0.04)_38%,transparent_72%)] blur-3xl"
       />
       <motion.div
         style={{ y: lowerGlowY }}
-        className="absolute right-[-10rem] top-[42vh] h-[34rem] w-[34rem] rounded-full bg-[radial-gradient(circle,rgba(0,255,65,0.12)_0%,rgba(0,255,65,0.03)_42%,transparent_74%)] blur-3xl"
+        className="absolute right-[-10rem] top-[42vh] h-[34rem] w-[34rem] rounded-full bg-[radial-gradient(circle,rgba(0,255,156,0.12)_0%,rgba(0,255,156,0.03)_42%,transparent_74%)] blur-3xl"
       />
     </div>
   )
@@ -59,7 +59,7 @@ function HeroHackerParallax({ targetRef }) {
       <img
         src="/hacker.png"
         alt="Hacker silhouette"
-        className="h-auto w-[96%] md:w-[82%] lg:w-[68%] object-contain drop-shadow-[0_0_42px_rgba(0,255,65,0.3)] brightness-[0.88] contrast-110 saturate-110"
+        className="h-auto w-[96%] md:w-[82%] lg:w-[68%] object-contain drop-shadow-[0_0_42px_rgba(0,255,156,0.3)] brightness-[0.88] contrast-110 saturate-110"
       />
     </motion.div>
   )
@@ -83,19 +83,19 @@ function HeroBackdropTextParallax({ targetRef }) {
     >
       <motion.h2
         style={{ x: xTop }}
-        className="text-[13vw] md:text-[11vw] font-black leading-none text-[#d7ffe4]/25 tracking-[-0.08em] whitespace-nowrap [text-shadow:0_0_22px_rgba(0,255,65,0.28)]"
+        className="text-[13vw] md:text-[11vw] font-black leading-none text-[#d7ffe4]/25 tracking-[-0.08em] whitespace-nowrap [text-shadow:0_0_22px_rgba(0,255,156,0.28)]"
       >
         CYBER DEFENSE
       </motion.h2>
       <motion.h2
         style={{ x: xMiddle }}
-        className="-mt-2 text-[15vw] md:text-[12vw] font-black leading-none text-[#edfff2]/30 tracking-[-0.08em] whitespace-nowrap [text-shadow:0_0_28px_rgba(0,255,65,0.34)]"
+        className="-mt-2 text-[15vw] md:text-[12vw] font-black leading-none text-[#edfff2]/30 tracking-[-0.08em] whitespace-nowrap [text-shadow:0_0_28px_rgba(0,255,156,0.34)]"
       >
         REAL TIME SHIELD
       </motion.h2>
       <motion.h2
         style={{ x: xBottom }}
-        className="-mt-2 text-[12vw] md:text-[10vw] font-black leading-none text-[#c9ffd8]/24 tracking-[-0.08em] whitespace-nowrap [text-shadow:0_0_20px_rgba(0,255,65,0.24)]"
+        className="-mt-2 text-[12vw] md:text-[10vw] font-black leading-none text-[#c9ffd8]/24 tracking-[-0.08em] whitespace-nowrap [text-shadow:0_0_20px_rgba(0,255,156,0.24)]"
       >
         THREAT BLOCKED
       </motion.h2>
@@ -247,25 +247,25 @@ function ThreatToast() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 100, scale: 0.8 }}
             transition={{ type: 'spring', damping: 20 }}
-            className="bg-black/90 border border-[#00ff41]/40 rounded-lg p-4 min-w-[320px] backdrop-blur-xl shadow-[0_0_30px_rgba(0,255,65,0.15)]"
+            className="bg-black/90 border border-[#00FF9C]/40 rounded-lg p-4 min-w-[320px] backdrop-blur-xl shadow-[0_0_30px_rgba(0,255,156,0.15)]"
           >
             <div className="flex items-start gap-3">
               <div className="mt-0.5">
-                <ShieldCheck className="w-5 h-5 text-[#00ff41]" />
+                <ShieldCheck className="w-5 h-5 text-[#00FF9C]" />
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[#00ff41] text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 bg-[#00ff41]/10 rounded">
+                  <span className="text-[#00FF9C] text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 bg-[#00FF9C]/10 rounded">
                     {currentThreat.status}
                   </span>
-                  <span className="text-gray-500 text-[10px] font-mono">
+                  <span className="text-gray-500 text-[10px] font-heading">
                     {new Date().toLocaleTimeString()}
                   </span>
                 </div>
                 <p className="text-white text-sm font-semibold">
                   {currentThreat.type} detected
                 </p>
-                <p className="text-gray-500 text-xs font-mono mt-0.5">
+                <p className="text-gray-500 text-xs font-heading mt-0.5">
                   Source: {currentThreat.ip}
                 </p>
               </div>
@@ -293,10 +293,10 @@ function ThreatTicker() {
   const doubledItems = [...tickerItems, ...tickerItems]
 
   return (
-    <div className="w-full bg-[#00ff41]/5 border-y border-[#00ff41]/10 py-2 threat-ticker">
+    <div className="w-full bg-[#00FF9C]/5 border-y border-[#00FF9C]/10 py-2 threat-ticker">
       <div className="threat-ticker-content">
         {doubledItems.map((item, i) => (
-          <span key={i} className="text-[#00ff41]/60 text-[11px] font-mono tracking-wider mx-8 uppercase">
+          <span key={i} className="text-[#00FF9C]/60 text-[11px] font-heading tracking-wider mx-8 uppercase">
             {item}
           </span>
         ))}
@@ -343,19 +343,19 @@ function HowItWorksStepCard({ step, index, timelineColor }) {
       className={`relative mb-10 flex items-start md:mb-14 ${isOddStep ? 'md:flex-row' : 'md:flex-row-reverse'}`}
     >
       <div className={`w-full pl-[88px] md:w-1/2 md:pl-0 ${isOddStep ? 'md:pr-16 md:text-right' : 'md:pl-16'}`}>
-        <div className="rounded-xl border border-[#00ff41]/12 bg-[#050805]/90 p-6 shadow-[0_0_24px_rgba(0,255,65,0.04)] transition-all hover:border-[#00ff41]/30 hover:shadow-[0_0_28px_rgba(0,255,65,0.1)] md:p-8">
-          <div className="mb-2 font-mono text-[10px] tracking-[0.2em] text-[#00ff41]/45">{`> STEP_${step.num}`}</div>
-          <h3 className="mb-3 text-2xl font-bold text-[#00ff41] md:text-3xl">{step.title}</h3>
+        <div className="rounded-xl border border-[#00FF9C]/12 bg-[#050805]/90 p-6 shadow-[0_0_24px_rgba(0,255,156,0.04)] transition-all hover:border-[#00FF9C]/30 hover:shadow-[0_0_28px_rgba(0,255,156,0.1)] md:p-8">
+          <div className="mb-2 font-heading text-[10px] tracking-[0.2em] text-[#00FF9C]/45">{`> STEP_${step.num}`}</div>
+          <h3 className="mb-3 text-2xl font-bold text-[#00FF9C] md:text-3xl">{step.title}</h3>
           <p className="text-base leading-relaxed text-gray-400 md:text-lg">{step.desc}</p>
         </div>
       </div>
 
       <div className="absolute left-[36px] top-6 md:static md:flex md:w-10 md:justify-center md:pt-5">
         <div
-          className="flex h-12 w-12 items-center justify-center rounded-full border-2 bg-[#040704] shadow-[0_0_22px_rgba(0,255,65,0.2)] transition-colors duration-700"
+          className="flex h-12 w-12 items-center justify-center rounded-full border-2 bg-[#040704] shadow-[0_0_22px_rgba(0,255,156,0.2)] transition-colors duration-700"
           style={{ borderColor: timelineColor }}
         >
-          <Icon className="h-5 w-5 text-[#00ff41]/80" />
+          <Icon className="h-5 w-5 text-[#00FF9C]/80" />
         </div>
       </div>
 
@@ -365,8 +365,8 @@ function HowItWorksStepCard({ step, index, timelineColor }) {
 }
 
 function HowItWorksTimeline() {
-  const [timelineColor, setTimelineColor] = useState('#00ff41')
-  const colorSteps = ['#00ff41', '#58ff8a', '#2eff7b', '#88ffab']
+  const [timelineColor, setTimelineColor] = useState('#00FF9C')
+  const colorSteps = ['#00FF9C', '#58ff8a', '#2eff7b', '#88ffab']
 
   useEffect(() => {
     let index = 0
@@ -415,7 +415,7 @@ function FaqSection() {
         transition={{ duration: 0.5 }}
         className="mb-10 text-center text-3xl font-bold md:text-4xl"
       >
-        Frequently Asked <span className="text-[#00ff41]">Questions</span>
+        Frequently Asked <span className="text-[#00FF9C]">Questions</span>
       </motion.h2>
 
       <div className="space-y-3">
@@ -430,11 +430,11 @@ function FaqSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: index * 0.06 }}
-              className="w-full rounded-xl border border-[#00ff41]/14 bg-[#040704]/85 px-5 py-4 text-left transition-all hover:border-[#00ff41]/32"
+              className="w-full rounded-xl border border-[#00FF9C]/14 bg-[#040704]/85 px-5 py-4 text-left transition-all hover:border-[#00FF9C]/32"
             >
               <div className="flex items-start justify-between gap-4">
                 <h3 className="text-base font-semibold text-white md:text-lg">{item.q}</h3>
-                <ArrowRight className={`mt-0.5 h-4 w-4 text-[#00ff41] transition-transform ${isOpen ? 'rotate-90' : ''}`} />
+                <ArrowRight className={`mt-0.5 h-4 w-4 text-[#00FF9C] transition-transform ${isOpen ? 'rotate-90' : ''}`} />
               </div>
               <AnimatePresence initial={false}>
                 {isOpen && (
@@ -493,13 +493,13 @@ export default function Home() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.5 }}
-        className="fixed top-3 left-1/2 z-[60] w-[calc(100%-0.5rem)] sm:w-[calc(100%-1rem)] max-w-6xl -translate-x-1/2 rounded-[1.35rem] border border-[#8dffb0]/30 bg-[linear-gradient(180deg,rgba(12,30,20,0.82)_0%,rgba(6,14,10,0.72)_100%)] px-2.5 py-2.5 shadow-[0_0_0_1px_rgba(180,255,205,0.08),0_0_24px_rgba(0,255,65,0.18),0_12px_40px_rgba(0,0,0,0.45)] backdrop-blur-2xl overflow-visible md:top-4 md:w-[calc(100%-1.25rem)] md:rounded-full md:px-7 md:py-3 md:flex md:items-center md:justify-between"
+        className="fixed top-3 left-1/2 z-[60] w-[calc(100%-0.5rem)] sm:w-[calc(100%-1rem)] max-w-6xl -translate-x-1/2 rounded-[1.35rem] border border-[#8dffb0]/30 bg-[linear-gradient(180deg,rgba(12,30,20,0.82)_0%,rgba(6,14,10,0.72)_100%)] px-2.5 py-2.5 shadow-[0_0_0_1px_rgba(180,255,205,0.08),0_0_24px_rgba(0,255,156,0.18),0_12px_40px_rgba(0,0,0,0.45)] backdrop-blur-2xl overflow-visible md:top-4 md:w-[calc(100%-1.25rem)] md:rounded-full md:px-7 md:py-3 md:flex md:items-center md:justify-between"
       >
-        <div className="pointer-events-none absolute inset-0 rounded-[1.35rem] border border-[#00ff41]/10 md:rounded-full" />
+        <div className="pointer-events-none absolute inset-0 rounded-[1.35rem] border border-[#00FF9C]/10 md:rounded-full" />
 
         <div className="relative flex items-center justify-between gap-2 md:gap-3">
           <div className="flex min-w-0 items-center gap-2">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#b7ffcb]/20 bg-[#0a1b12]/70 shadow-[0_0_18px_rgba(0,255,65,0.18)] md:h-12 md:w-12">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#b7ffcb]/20 bg-[#0a1b12]/70 shadow-[0_0_18px_rgba(0,255,156,0.18)] md:h-12 md:w-12">
               <img
                 src="/kavach-logo.svg"
                 alt="Kavach logo"
@@ -508,7 +508,7 @@ export default function Home() {
             </div>
             <div className="flex min-w-0 flex-col leading-none">
               <span className="truncate text-xs sm:text-sm md:text-lg font-bold tracking-[0.12em] md:tracking-[0.22em] text-white uppercase">Kavach</span>
-              <span className="hidden md:block text-[10px] font-mono uppercase tracking-[0.3em] text-[#9dffb8]/65">Digital Armor</span>
+              <span className="hidden md:block text-[10px] font-heading uppercase tracking-[0.3em] text-[#9dffb8]/65">Digital Armor</span>
             </div>
           </div>
 
@@ -530,14 +530,14 @@ export default function Home() {
               key={item.id}
               href={item.href}
               onClick={(event) => handleNavScroll(event, item.id)}
-              className="rounded-full px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:text-[#00ff41]"
+              className="rounded-full px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:text-[#00FF9C]"
             >
               {item.label}
             </a>
           ))}
         </div>
 
-        <Link href="/login" className="hidden md:inline-block relative rounded-full border border-[#b8ffcc]/50 bg-[#00ff41] px-6 py-2.5 text-sm font-bold text-black shadow-[0_0_16px_rgba(0,255,65,0.35)] transition-all hover:border-[#d6ffe0] hover:bg-[#78ff9b] hover:shadow-[0_0_28px_rgba(0,255,65,0.5)] text-center">
+        <Link href="/login" className="hidden md:inline-block relative rounded-full border border-[#b8ffcc]/50 bg-[#00FF9C] px-6 py-2.5 text-sm font-bold text-black shadow-[0_0_16px_rgba(0,255,156,0.35)] transition-all hover:border-[#d6ffe0] hover:bg-[#78ff9b] hover:shadow-[0_0_28px_rgba(0,255,156,0.5)] text-center">
           Get Protected
         </Link>
 
@@ -555,7 +555,7 @@ export default function Home() {
                   key={item.id}
                   href={item.href}
                   onClick={(event) => handleNavScroll(event, item.id)}
-                  className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-200 transition-colors hover:bg-[#00ff41]/10 hover:text-[#00ff41]"
+                  className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-200 transition-colors hover:bg-[#00FF9C]/10 hover:text-[#00FF9C]"
                 >
                   {item.label}
                 </a>
@@ -564,7 +564,7 @@ export default function Home() {
               <Link
                 href="/login"
                 onClick={() => setIsMobileNavOpen(false)}
-                className="mt-2 block rounded-xl border border-[#b8ffcc]/50 bg-[#00ff41] px-4 py-3 text-center text-sm font-bold text-black"
+                className="mt-2 block rounded-xl border border-[#b8ffcc]/50 bg-[#00FF9C] px-4 py-3 text-center text-sm font-bold text-black"
               >
                 Get Protected
               </Link>
@@ -586,7 +586,7 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.35 }}
             className="mx-auto flex max-w-4xl flex-col items-center text-center"
           >
-            <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#00ff41]/20 bg-black/40 px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.35em] text-[#00ff41]/80 backdrop-blur-md">
+            <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#00FF9C]/20 bg-black/40 px-4 py-1.5 font-heading text-[11px] uppercase tracking-[0.35em] text-[#00FF9C]/80 backdrop-blur-md">
               Live Threat Surface
             </span>
           </motion.div>
@@ -603,7 +603,7 @@ export default function Home() {
         <motion.div 
           animate={{ y: [0, -20, 0], opacity: [0.3, 0.7, 0.3] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute left-[15%] top-[40%] z-20 text-[#00ff41] font-mono text-xs hidden md:block"
+          className="absolute left-[15%] top-[40%] z-20 text-[#00FF9C] font-heading text-xs hidden md:block"
         >
           {`> connection_established`} <br/>
           {`> bypassing_firewall...`} <br/>
@@ -613,11 +613,11 @@ export default function Home() {
         <motion.div 
           animate={{ y: [0, 20, 0], opacity: [0.2, 0.8, 0.2] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute right-[15%] top-[30%] z-20 text-[#00ff41] font-mono text-xs hidden md:block text-right"
+          className="absolute right-[15%] top-[30%] z-20 text-[#00FF9C] font-heading text-xs hidden md:block text-right"
         >
           {`analyzing_payload...`} <br/>
           {`signature_match: null`} <br/>
-          <span className="text-[#00ff41]">{`[ THREAT NEUTRALIZED ]`}</span>
+          <span className="text-[#00FF9C]">{`[ THREAT NEUTRALIZED ]`}</span>
         </motion.div>
       </section>
 
@@ -640,16 +640,16 @@ export default function Home() {
         transition={{ duration: 0.8, delay: 1 }}
         className="w-full"
       >
-        <div className="relative w-full rounded-3xl overflow-hidden border border-[#00ff41]/10 bg-[#030503] p-12 md:p-24 flex flex-col items-center text-center">
+        <div className="relative w-full rounded-3xl overflow-hidden border border-[#00FF9C]/10 bg-[#030503] p-12 md:p-24 flex flex-col items-center text-center">
           
           {/* Subtle green glow background */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#00ff41]/5 blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#00FF9C]/5 blur-[120px] rounded-full pointer-events-none" />
           
           {/* Corner decorations - like HUD brackets */}
-          <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-[#00ff41]/30" />
-          <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-[#00ff41]/30" />
-          <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-[#00ff41]/30" />
-          <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-[#00ff41]/30" />
+          <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-[#00FF9C]/30" />
+          <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-[#00FF9C]/30" />
+          <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-[#00FF9C]/30" />
+          <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-[#00FF9C]/30" />
 
           <div className="relative z-10 flex flex-col items-center">
             {/* Badge */}
@@ -657,7 +657,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-[#00ff41] border border-[#00ff41]/30 bg-[#00ff41]/5 px-4 py-1.5 rounded-full mb-8"
+              className="inline-flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-[#00FF9C] border border-[#00FF9C]/30 bg-[#00FF9C]/5 px-4 py-1.5 rounded-full mb-8"
             >
               <ShieldAlert className="w-3 h-3" />
               AI-Powered Cyber Defense
@@ -672,7 +672,7 @@ export default function Home() {
               data-text="Securing the Digital Human Experience"
             >
               Securing the Digital <br />
-              <span className="text-[#00ff41] text-glow-green">Human Experience</span>
+              <span className="text-[#00FF9C] text-glow-green">Human Experience</span>
             </motion.h1>
 
             {/* Subheadline */}
@@ -690,9 +690,9 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="font-mono text-[11px] text-[#00ff41]/60 tracking-wider flex items-center gap-2"
+              className="font-heading text-[11px] text-[#00FF9C]/60 tracking-wider flex items-center gap-2"
             >
-              <span className="w-2 h-2 bg-[#00ff41] rounded-full animate-pulse" />
+              <span className="w-2 h-2 bg-[#00FF9C] rounded-full animate-pulse" />
               KAVACH SHIELD ACTIVE — MONITORING 2.4M ENDPOINTS
               <span className="cursor-blink">█</span>
             </motion.div>
@@ -723,10 +723,10 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="bg-[#050805] border border-[#00ff41]/10 rounded-xl p-5 text-center hover:border-[#00ff41]/30 transition-all group"
+              className="bg-[#050805] border border-[#00FF9C]/10 rounded-xl p-5 text-center hover:border-[#00FF9C]/30 transition-all group"
             >
-              <stat.icon className="w-5 h-5 text-[#00ff41]/50 mx-auto mb-3 group-hover:text-[#00ff41] transition-colors" />
-              <div className="text-2xl md:text-3xl font-bold text-[#00ff41] text-glow-green font-mono">{stat.value}</div>
+              <stat.icon className="w-5 h-5 text-[#00FF9C]/50 mx-auto mb-3 group-hover:text-[#00FF9C] transition-colors" />
+              <div className="text-2xl md:text-3xl font-bold text-[#00FF9C] text-glow-green font-heading">{stat.value}</div>
               <div className="text-xs text-gray-500 mt-1 uppercase tracking-wider">{stat.label}</div>
             </motion.div>
           ))}
@@ -742,7 +742,7 @@ export default function Home() {
           
           {/* Left Text Column */}
           <div className="flex flex-col pt-4">
-            <h2 className="text-4xl font-bold mb-6">What is <span className="text-[#00ff41]">Kavach</span>?</h2>
+            <h2 className="text-4xl font-bold mb-6">What is <span className="text-[#00FF9C]">Kavach</span>?</h2>
             
             <p className="text-gray-400 text-lg leading-relaxed mb-10">
               Kavach (Sanskrit for &quot;Armor&quot;) is an advanced AI-driven cybersecurity layer designed to provide military-grade protection to everyday digital citizens. Unlike traditional antivirus software that reacts to threats, Kavach uses predictive behavioral analysis to neutralize attacks before they even manifest.
@@ -750,17 +750,17 @@ export default function Home() {
 
             {/* Feature Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-[#0a0c0a] border border-white/5 rounded-xl p-5 hover:border-[#00ff41]/30 transition-all group hover:shadow-[0_0_20px_rgba(0,255,65,0.08)]">
-                <div className="w-8 h-8 rounded-lg bg-[#00ff41]/10 flex items-center justify-center mb-4 group-hover:bg-[#00ff41]/20 transition-colors">
-                  <Target className="text-[#00ff41] w-5 h-5" />
+              <div className="bg-[#0a0c0a] border border-white/5 rounded-xl p-5 hover:border-[#00FF9C]/30 transition-all group hover:shadow-[0_0_20px_rgba(0,255,156,0.08)]">
+                <div className="w-8 h-8 rounded-lg bg-[#00FF9C]/10 flex items-center justify-center mb-4 group-hover:bg-[#00FF9C]/20 transition-colors">
+                  <Target className="text-[#00FF9C] w-5 h-5" />
                 </div>
                 <h3 className="font-bold mb-1">AI Engine</h3>
                 <p className="text-sm text-gray-400">Neural network threat detection</p>
               </div>
 
-              <div className="bg-[#0a0c0a] border border-white/5 rounded-xl p-5 hover:border-[#00ff41]/30 transition-all border-l-2 border-l-[#00ff41] group hover:shadow-[0_0_20px_rgba(0,255,65,0.08)]">
-                <div className="w-8 h-8 rounded-lg bg-[#00ff41]/10 flex items-center justify-center mb-4 group-hover:bg-[#00ff41]/20 transition-colors">
-                  <Zap className="text-[#00ff41] w-5 h-5" />
+              <div className="bg-[#0a0c0a] border border-white/5 rounded-xl p-5 hover:border-[#00FF9C]/30 transition-all border-l-2 border-l-[#00FF9C] group hover:shadow-[0_0_20px_rgba(0,255,156,0.08)]">
+                <div className="w-8 h-8 rounded-lg bg-[#00FF9C]/10 flex items-center justify-center mb-4 group-hover:bg-[#00FF9C]/20 transition-colors">
+                  <Zap className="text-[#00FF9C] w-5 h-5" />
                 </div>
                 <h3 className="font-bold mb-1">Low Latency</h3>
                 <p className="text-sm text-gray-400">Security that doesn&apos;t slow you down</p>
@@ -769,16 +769,16 @@ export default function Home() {
           </div>
 
           {/* Right Command Graph Column */}
-          <div className="relative w-full aspect-video lg:aspect-[4/3] overflow-hidden rounded-2xl border border-[#00ff41]/15 bg-[radial-gradient(circle_at_30%_18%,rgba(0,255,65,0.09),rgba(3,7,4,0.92)_48%,#020302_100%)] shadow-[0_0_55px_rgba(0,255,65,0.08)]">
-            <div className="absolute inset-[10px] rounded-xl border border-[#00ff41]/10 z-10 pointer-events-none" />
-            <div className="absolute inset-0 z-0 opacity-18 bg-[linear-gradient(rgba(0,255,65,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,65,0.08)_1px,transparent_1px)] bg-[size:36px_36px]" />
+          <div className="relative w-full aspect-video lg:aspect-[4/3] overflow-hidden rounded-2xl border border-[#00FF9C]/15 bg-[radial-gradient(circle_at_30%_18%,rgba(0,255,156,0.09),rgba(3,7,4,0.92)_48%,#020302_100%)] shadow-[0_0_55px_rgba(0,255,156,0.08)]">
+            <div className="absolute inset-[10px] rounded-xl border border-[#00FF9C]/10 z-10 pointer-events-none" />
+            <div className="absolute inset-0 z-0 opacity-18 bg-[linear-gradient(rgba(0,255,156,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,156,0.08)_1px,transparent_1px)] bg-[size:36px_36px]" />
 
-            <div className="absolute top-5 left-5 z-20 rounded-md border border-[#00ff41]/20 bg-black/70 px-3 py-2 backdrop-blur-sm">
-              <div className="font-mono text-[10px] tracking-[0.2em] text-[#8fffb0]">LIVE THREAT GRAPH</div>
-              <div className="mt-1 font-mono text-[10px] text-gray-400">NODES: 14  |  EVENTS: 348/s  |  STATUS: ACTIVE</div>
+            <div className="absolute top-5 left-5 z-20 rounded-md border border-[#00FF9C]/20 bg-black/70 px-3 py-2 backdrop-blur-sm">
+              <div className="font-heading text-[10px] tracking-[0.2em] text-[#8fffb0]">LIVE THREAT GRAPH</div>
+              <div className="mt-1 font-heading text-[10px] text-gray-400">NODES: 14  |  EVENTS: 348/s  |  STATUS: ACTIVE</div>
             </div>
 
-            <div className="absolute right-5 top-5 z-20 flex items-center gap-2 rounded border border-[#00ff41]/25 bg-black/70 px-3 py-1.5 font-mono text-[10px] text-[#00ff41]">
+            <div className="absolute right-5 top-5 z-20 flex items-center gap-2 rounded border border-[#00FF9C]/25 bg-black/70 px-3 py-1.5 font-heading text-[10px] text-[#00FF9C]">
               <AlertTriangle className="w-3 h-3" />
               SCANNING...
             </div>
@@ -786,14 +786,14 @@ export default function Home() {
             <svg viewBox="0 0 760 520" className="absolute inset-0 z-10 h-full w-full">
               <defs>
                 <linearGradient id="threatLink" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#00ff41" stopOpacity="0.1" />
-                  <stop offset="50%" stopColor="#00ff41" stopOpacity="0.45" />
-                  <stop offset="100%" stopColor="#00ff41" stopOpacity="0.14" />
+                  <stop offset="0%" stopColor="#00FF9C" stopOpacity="0.1" />
+                  <stop offset="50%" stopColor="#00FF9C" stopOpacity="0.45" />
+                  <stop offset="100%" stopColor="#00FF9C" stopOpacity="0.14" />
                 </linearGradient>
                 <radialGradient id="hotspot" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#00ff41" stopOpacity="0.22" />
-                  <stop offset="60%" stopColor="#00ff41" stopOpacity="0.06" />
-                  <stop offset="100%" stopColor="#00ff41" stopOpacity="0" />
+                  <stop offset="0%" stopColor="#00FF9C" stopOpacity="0.22" />
+                  <stop offset="60%" stopColor="#00FF9C" stopOpacity="0.06" />
+                  <stop offset="100%" stopColor="#00FF9C" stopOpacity="0" />
                 </radialGradient>
               </defs>
 
@@ -847,7 +847,7 @@ export default function Home() {
                 { x: 255, y: 376, s: 6 },
               ].map((node, i) => (
                 <g key={`node-${i}`}>
-                  <circle cx={node.x} cy={node.y} r={node.s} fill="rgba(0,0,0,0.72)" stroke="#00ff41" strokeWidth="1.8" />
+                  <circle cx={node.x} cy={node.y} r={node.s} fill="rgba(0,0,0,0.72)" stroke="#00FF9C" strokeWidth="1.8" />
                   <motion.circle
                     cx={node.x}
                     cy={node.y}
@@ -879,19 +879,19 @@ export default function Home() {
             </svg>
 
             <motion.div
-              className="absolute left-0 top-0 z-10 h-full w-[24%] bg-[linear-gradient(90deg,rgba(0,255,65,0.12),transparent)] blur-md"
+              className="absolute left-0 top-0 z-10 h-full w-[24%] bg-[linear-gradient(90deg,rgba(0,255,156,0.12),transparent)] blur-md"
               animate={{ x: ['-20%', '390%'] }}
               transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
             />
 
             <div className="absolute bottom-5 left-5 z-20 flex flex-wrap gap-2">
-              <div className="rounded bg-[#00ff41] px-3 py-1.5 text-[11px] font-bold text-black shadow-[0_0_14px_rgba(0,255,65,0.4)]">LIVE ANALYSIS</div>
-              <div className="rounded border border-[#00ff41]/30 bg-black/70 px-3 py-1.5 text-[11px] font-bold text-[#b9ffce]">THREAT LEVEL: LOW</div>
+              <div className="rounded bg-[#00FF9C] px-3 py-1.5 text-[11px] font-bold text-black shadow-[0_0_14px_rgba(0,255,156,0.4)]">LIVE ANALYSIS</div>
+              <div className="rounded border border-[#00FF9C]/30 bg-black/70 px-3 py-1.5 text-[11px] font-bold text-[#b9ffce]">THREAT LEVEL: LOW</div>
             </div>
 
-            <div className="absolute bottom-5 right-5 z-20 hidden w-44 rounded border border-[#00ff41]/20 bg-black/65 p-2 md:block">
-              <div className="mb-1 font-mono text-[9px] tracking-[0.18em] text-[#8fffb0]">INCIDENT FEED</div>
-              <div className="space-y-1 font-mono text-[9px] text-gray-400">
+            <div className="absolute bottom-5 right-5 z-20 hidden w-44 rounded border border-[#00FF9C]/20 bg-black/65 p-2 md:block">
+              <div className="mb-1 font-heading text-[9px] tracking-[0.18em] text-[#8fffb0]">INCIDENT FEED</div>
+              <div className="space-y-1 font-heading text-[9px] text-gray-400">
                 <div className="flex justify-between"><span>PHISH KIT</span><span className="text-[#9cffbf]">BLOCKED</span></div>
                 <div className="flex justify-between"><span>MALWARE IOC</span><span className="text-[#9cffbf]">QUAR.</span></div>
                 <div className="flex justify-between"><span>DNS SPOOF</span><span className="text-[#9cffbf]">DENIED</span></div>
@@ -912,7 +912,7 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="text-3xl md:text-4xl font-bold mb-20 text-center"
         >
-          How It <span className="text-[#00ff41]">Works</span>
+          How It <span className="text-[#00FF9C]">Works</span>
         </motion.h2>
 
         <HowItWorksTimeline />
@@ -932,27 +932,27 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative rounded-2xl border border-[#00ff41]/10 hover:border-[#00ff41]/50 bg-[#030503] p-10 md:p-16 text-center shadow-[0_0_30px_rgba(0,255,65,0.05)] overflow-hidden transition-all duration-500"
+          className="relative rounded-2xl border border-[#00FF9C]/10 hover:border-[#00FF9C]/50 bg-[#030503] p-10 md:p-16 text-center shadow-[0_0_30px_rgba(0,255,156,0.05)] overflow-hidden transition-all duration-500"
         >
           {/* Corner brackets */}
-          <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-[#00ff41]/20" />
-          <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-[#00ff41]/20" />
-          <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-[#00ff41]/20" />
-          <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-[#00ff41]/20" />
+          <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-[#00FF9C]/20" />
+          <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-[#00FF9C]/20" />
+          <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-[#00FF9C]/20" />
+          <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-[#00FF9C]/20" />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-[#00ff41]/5 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#00FF9C]/5 to-transparent pointer-events-none" />
           
-          <div className="font-mono text-[10px] text-[#00ff41]/40 tracking-widest uppercase mb-4 relative z-10">
+          <div className="font-heading text-[10px] text-[#00FF9C]/40 tracking-widest uppercase mb-4 relative z-10">
             {'// INITIATE_PROTOCOL'}
           </div>
           <h2 className="relative z-10 text-3xl md:text-4xl font-bold mb-10 text-white">
             Ready to secure your future?
           </h2>
           <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/dashboard" className="w-full sm:w-auto bg-[#00ff41] hover:bg-[#00cc33] text-black px-8 py-3.5 rounded text-sm font-bold shadow-[0_0_20px_rgba(0,255,65,0.3)] hover:shadow-[0_0_30px_rgba(0,255,65,0.5)] transition-all text-center">
+            <Link href="/dashboard" className="w-full sm:w-auto bg-[#00FF9C] hover:bg-[#00cc33] text-black px-8 py-3.5 rounded text-sm font-bold shadow-[0_0_20px_rgba(0,255,156,0.3)] hover:shadow-[0_0_30px_rgba(0,255,156,0.5)] transition-all text-center">
               Launch Dashboard
             </Link>
-            <button className="w-full sm:w-auto bg-transparent hover:bg-[#00ff41]/5 text-gray-300 hover:text-[#00ff41] border border-[#00ff41]/20 hover:border-[#00ff41]/50 px-8 py-3.5 rounded text-sm font-bold transition-all">
+            <button className="w-full sm:w-auto bg-transparent hover:bg-[#00FF9C]/5 text-gray-300 hover:text-[#00FF9C] border border-[#00FF9C]/20 hover:border-[#00FF9C]/50 px-8 py-3.5 rounded text-sm font-bold transition-all">
               View Documentation
             </button>
           </div>
@@ -968,3 +968,4 @@ export default function Home() {
     </main>
   )
 }
+

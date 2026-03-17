@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Terminal, Pause, Play, XCircle, AlertCircle,
   CheckCircle, Info, ScanFace, ShieldAlert, Eye,
-  Wifi, WifiOff, AlertTriangle, X, Radio,
+  Wifi, WifiOff, AlertTriangle, X, Radio, Zap,
 } from 'lucide-react';
 import { db } from '../firebase';
 import {
   collection, query, orderBy, onSnapshot,
-  addDoc, serverTimestamp, doc, setDoc, increment,
+  addDoc, serverTimestamp, doc, setDoc, increment, getDocs, deleteDoc,
 } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 
@@ -83,9 +83,10 @@ export default function Logs() {
 
   /* â”€â”€ UI state â”€â”€ */
   const [paused,    setPaused]    = useState(false);
-  const [filter,    setFilter]    = useState('ALL');
+  const [filter,    setFilter]    = useState('NETWORK');
   const [typingLog, setTypingLog] = useState('');
   const [toasts,    setToasts]    = useState([]);
+  const [simulating, setSimulating] = useState(false);
   const bottomRef = useRef(null);
   const pausedRef = useRef(false);   // non-stale copy for WS callback
   const processedCriticalIdsRef = useRef(new Set());
@@ -95,8 +96,19 @@ export default function Logs() {
 
   // â”€â”€ Save flagged packet to Firestore â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const saveFlaggedToFirestore = useCallback(async (pkt) => {
+    const userId = currentUser?.uid;
+    if (!userId) return;
+
+    const isCritical =
+      String(pkt?.severity || '').toUpperCase() === 'CRITICAL' ||
+      Number(pkt?.max_score || 0) >= 0.85;
+
+    if (!isCritical) return;
+
     try {
       await addDoc(collection(db, 'network_alerts'), {
+        userId,
+        userEmail: currentUser?.email || null,
         packet_id:   pkt.id,
         timestamp:   serverTimestamp(),
         src_ip:      pkt.src_ip,
@@ -112,12 +124,30 @@ export default function Logs() {
         all_threats: JSON.stringify(pkt.threats ?? []),
         process:     pkt.process ?? null,
         pid:         pkt.pid     ?? null,
-        synthetic:   false,
+        synthetic:   Boolean(pkt.synthetic),
       });
     } catch (_) {
       // silently ignore write failures (e.g. offline / rules)
     }
-  }, []);
+  }, [currentUser]);
+
+  // â”€â”€ One-time cleanup: delete previously generated network alerts â”€â”€
+  useEffect(() => {
+    if (!currentUser?.uid) return;
+    const key = `network-alerts-purged-${currentUser.uid}`;
+    if (sessionStorage.getItem(key) === '1') return;
+
+    (async () => {
+      try {
+        const snap = await getDocs(collection(db, 'network_alerts'));
+        await Promise.all(snap.docs.map((d) => deleteDoc(d.ref).catch(() => {})));
+      } catch (_) {
+        // ignore purge failures
+      } finally {
+        sessionStorage.setItem(key, '1');
+      }
+    })();
+  }, [currentUser]);
 
   const saveCriticalActivityToFirestore = useCallback(async (logEntry) => {
     const userId = currentUser?.uid || 'anonymous';
@@ -193,7 +223,7 @@ export default function Logs() {
               : 'NETWORK';
 
             const primaryThreat = pkt.threats?.[0];
-            const tag = '[REAL]';
+            const tag = pkt.synthetic ? '[SIM]' : '[REMOTE]';
             const stateSuffix = pkt.state ? ` state=${pkt.state}` : '';
             const message = pkt.is_suspicious
               ? `[NET-PROBE]${tag} !! FLAGGED -- ${primaryThreat?.type ?? 'Anomaly'} ` +
@@ -221,7 +251,7 @@ export default function Logs() {
               return updated.length > 200 ? updated.slice(-200) : updated;
             });
 
-            // Toast + Firestore save for flagged packets
+            // Toast for flagged packets; Firebase write only for CRITICAL packets
             if (pkt.is_suspicious) {
               setToasts(prev => [...prev.slice(-4), {
                 id:         pkt.id,
@@ -233,7 +263,13 @@ export default function Logs() {
                 dstIp:      pkt.dst_ip,
                 dstPort:    pkt.dst_port,
               }]);
-              saveFlaggedToFirestore(pkt);
+              const isCriticalPacket =
+                String(pkt?.severity || '').toUpperCase() === 'CRITICAL' ||
+                Number(pkt?.max_score || 0) >= 0.85;
+
+              if (isCriticalPacket) {
+                saveFlaggedToFirestore(pkt);
+              }
             }
           } catch (_) {}
         };
@@ -277,7 +313,7 @@ export default function Logs() {
         return [{
           id: doc.id, time: ts,
           timestampMs: d.timestamp.toMillis(),
-          level: d.verdict === 'DEEPFAKE' ? 'CRITICAL' : 'SUCCESS',
+          level: d.verdict === 'DEEPFAKE' ? 'ALERT' : 'SUCCESS',
           message: `[KAVACH-DEEPFAKE] ${d.verdict} detected in ${d.filename}. Confidence: ${d.confidence}%. User: ${d.userName}`,
           isReal: true,
         }];
@@ -300,7 +336,7 @@ export default function Logs() {
         return [{
           id: doc.id, time: ts,
           timestampMs: d.timestamp.toMillis(),
-          level: isBad ? 'CRITICAL' : 'INFO',
+          level: isBad ? 'ALERT' : 'INFO',
           message: `[KAVACH-PHISHING] Incident ${d.fusion?.severity} detected. Fusion Score: ${d.fusion?.final_score?.toFixed(2) ?? '?'}. Target: ${d.userName}`,
           isPhishing: true,
         }];
@@ -323,7 +359,7 @@ export default function Logs() {
         return [{
           id: doc.id, time: ts,
           timestampMs: d.timestamp.toMillis(),
-          level: isBad ? 'CRITICAL' : 'SUCCESS',
+          level: isBad ? 'ALERT' : 'SUCCESS',
           message: `[KAVACH-STEGO] Payload scan ${d.severity}. Score: ${d.risk_score?.toFixed(0) ?? 0}%. User: ${d.userName}`,
           isStego: true,
         }];
@@ -335,10 +371,10 @@ export default function Logs() {
   const allLogs = [...dbLogs, ...phishingLogs, ...stegoLogs, ...networkLogs]
     .sort((a, b) => (a.timestampMs || 0) - (b.timestampMs || 0));
 
-  // â”€â”€ Persist latest CRITICAL event per user â”€â”€
+  // â”€â”€ Persist latest NETWORK CRITICAL event per user â”€â”€
   useEffect(() => {
     const latest = allLogs[allLogs.length - 1];
-    if (!latest || latest.level !== 'CRITICAL') return;
+    if (!latest || latest.level !== 'CRITICAL' || !latest.isNetwork) return;
 
     const eventId = latest.id || `${latest.time}-${latest.message}`;
     if (processedCriticalIdsRef.current.has(eventId)) return;
@@ -346,11 +382,6 @@ export default function Logs() {
     processedCriticalIdsRef.current.add(eventId);
     saveCriticalActivityToFirestore(latest);
   }, [allLogs.length, saveCriticalActivityToFirestore]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // â”€â”€ Auto-scroll â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  useEffect(() => {
-    if (!paused) bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [allLogs.length, paused]);
 
   // â”€â”€ Typing animation for newest entry â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   useEffect(() => {
@@ -408,6 +439,73 @@ export default function Logs() {
       topSource: topSource ? `${topSource[0]} (${topSource[1]})` : 'None',
     };
   }, [networkLogs]);
+
+  // ── Simulate critical packet ─────────────────────────────────
+  const runSimulation = useCallback(async () => {
+    if (simulating) return;
+    setSimulating(true);
+
+    const DEMO_THREATS = [
+      { type: 'Suspicious Port',   detail: 'Outbound TCP to port 4444 -- Metasploit default C2',      port: 4444 },
+      { type: 'SYN Flood',         detail: 'Burst of SYN_SENT states detected from internal host',    port: 80   },
+      { type: 'DNS Tunneling',     detail: 'Abnormally large DNS payload to external resolver',        port: 53   },
+      { type: 'Data Exfiltration', detail: 'Large outbound transfer (>40 KB) to untrusted public IP', port: 8443 },
+    ];
+    const threat = DEMO_THREATS[Math.floor(Math.random() * DEMO_THREATS.length)];
+    const now    = Date.now();
+    const pktId  = `sim-${now}`;
+
+    const simPkt = {
+      id:               pktId,
+      timestamp:        now / 1000,
+      src_ip:           `192.168.${Math.floor(Math.random() * 5) + 1}.${Math.floor(Math.random() * 200) + 10}`,
+      src_port:         Math.floor(Math.random() * 30000) + 30000,
+      dst_ip:           `${Math.floor(Math.random() * 99) + 1}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 253) + 1}`,
+      dst_port:         threat.port,
+      protocol:         'TCP',
+      bytes:            Math.floor(Math.random() * 80000) + 40000,
+      ttl:              64,
+      flags:            'SYN',
+      state:            'SYN_SENT',
+      size_trustworthy: true,
+      pid:              null,
+      process:          '[simulation]',
+      synthetic:        true,
+      is_suspicious:    true,
+      severity:         'CRITICAL',
+      max_score:        0.92 + Math.random() * 0.07,
+      threats:          [{ type: threat.type, score: 0.95, detail: threat.detail }],
+    };
+
+    const timeStr = new Date(now).toLocaleTimeString('en-IN', {
+      timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+    });
+    const message =
+      `[SIM] !! CRITICAL -- ${threat.type} (score ${Math.round(simPkt.max_score * 100)}%): ${simPkt.src_ip}:${simPkt.src_port} -> ${simPkt.dst_ip}:${simPkt.dst_port} ` +
+      `[TCP] state=SYN_SENT | ${threat.detail}`;
+
+    const logEntry = {
+      id: pktId, time: timeStr, timestampMs: now,
+      level: 'CRITICAL', message,
+      isNetwork: true, isFlagged: true, pkt: simPkt,
+    };
+
+    setNetworkLogs(prev => [...prev, logEntry].slice(-200));
+    setToasts(prev => [...prev.slice(-4), {
+      id:         pktId,
+      severity:   'CRITICAL',
+      threatType: threat.type,
+      detail:     threat.detail,
+      srcIp:      simPkt.src_ip,
+      srcPort:    simPkt.src_port,
+      dstIp:      simPkt.dst_ip,
+      dstPort:    simPkt.dst_port,
+    }]);
+
+    await saveFlaggedToFirestore(simPkt);
+    await saveCriticalActivityToFirestore(logEntry);
+    setTimeout(() => setSimulating(false), 2000);
+  }, [simulating, saveFlaggedToFirestore, saveCriticalActivityToFirestore]);
 
   // â”€â”€ Export CSV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const downloadAudit = () => {

@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import DashboardCard from '../components/DashboardCard';
 import { db } from '../firebase';
-import { collection, onSnapshot, query, doc } from 'firebase/firestore';
+import { collection, onSnapshot, query, doc, where } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -28,6 +28,7 @@ const SERVICE_META = {
   Deepfake: { color: '#00FF9C', shortLabel: 'Deepfake' },
   Phishing: { color: '#F97316', shortLabel: 'Phishing' },
   Steganography: { color: '#A855F7', shortLabel: 'Stego' },
+  Network: { color: '#FF3D3D', shortLabel: 'Network' },
 };
 
 function CustomTooltip({ active, payload, label }) {
@@ -128,6 +129,19 @@ function getStegoType(log) {
   return 'Stego Scan';
 }
 
+function buildNetworkAlertEvent(log, index) {
+  const createdAt = toDate(log.timestamp) || (log.timestampMs ? new Date(log.timestampMs) : null);
+  const score = clamp01(Number(log.max_score) || 0);
+  return {
+    id: log.packet_id || log.id || `net-alert-${index}`,
+    service: 'Network',
+    typeLabel: log.threat_type || (log.threats?.[0]?.type) || 'Network Threat',
+    score,
+    severity: classifySeverity(score),
+    date: createdAt,
+  };
+}
+
 function buildEvent(service, log, index) {
   const createdAt = toDate(log.timestamp);
 
@@ -219,9 +233,11 @@ export default function Dashboard() {
   const [deepfakeLogs, setDeepfakeLogs] = useState([]);
   const [phishingLogs, setPhishingLogs] = useState([]);
   const [stegoLogs, setStegoLogs] = useState([]);
+  const [networkAlerts, setNetworkAlerts] = useState([]);
   const [users, setUsers] = useState([]);
   const [criticalVitals, setCriticalVitals] = useState(null);
 
+  const userId = currentUser?.uid || 'anonymous';
   const userName = userProfile?.name || currentUser?.displayName || 'Operative';
 
   useEffect(() => {
@@ -251,7 +267,16 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    const userId = currentUser?.uid || 'anonymous';
+    return onSnapshot(query(
+      collection(db, 'network_alerts'),
+      where('userId', '==', userId),
+      where('severity', '==', 'CRITICAL'),
+    ), (snapshot) => {
+      setNetworkAlerts(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+  }, [userId]);
+
+  useEffect(() => {
     const docRef = doc(db, 'critical_activities', userId);
 
     return onSnapshot(docRef, (snapshot) => {
@@ -261,7 +286,7 @@ export default function Dashboard() {
       }
       setCriticalVitals(snapshot.data());
     });
-  }, [currentUser]);
+  }, [userId]);
 
   const criticalLastSeen = useMemo(() => {
     if (!criticalVitals?.lastCriticalAt) return 'No critical activity';
@@ -273,7 +298,8 @@ export default function Dashboard() {
     const deepfakeEvents = deepfakeLogs.map((log, index) => buildEvent('deepfake', log, index));
     const phishingEvents = phishingLogs.map((log, index) => buildEvent('phishing', log, index));
     const stegoEvents = stegoLogs.map((log, index) => buildEvent('stego', log, index));
-    const allEvents = [...deepfakeEvents, ...phishingEvents, ...stegoEvents];
+    const networkAlertEvents = networkAlerts.map((log, index) => buildNetworkAlertEvent(log, index));
+    const allEvents = [...deepfakeEvents, ...phishingEvents, ...stegoEvents, ...networkAlertEvents];
 
     const now = Date.now();
     const last24hStart = now - DAY_MS;
@@ -365,6 +391,7 @@ export default function Dashboard() {
       buildServiceSummary('Deepfake', deepfakeEvents),
       buildServiceSummary('Phishing', phishingEvents),
       buildServiceSummary('Steganography', stegoEvents),
+      buildServiceSummary('Network', networkAlertEvents),
     ];
 
     const recentFindings = [...recent24hEvents]
@@ -465,7 +492,7 @@ export default function Dashboard() {
       recentFindings,
       alerts24h,
     };
-  }, [deepfakeLogs, phishingLogs, stegoLogs, users]);
+  }, [deepfakeLogs, phishingLogs, stegoLogs, networkAlerts, users]);
 
   return (
     <div className="space-y-6">

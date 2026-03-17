@@ -58,7 +58,7 @@ export default function AuthPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center cyber-grid">
-        <div className="text-[#00FF9C] font-mono tracking-widest animate-pulse text-sm">
+        <div className="text-[#00FF9C] font-heading tracking-widest animate-pulse text-sm">
           CHECKING CREDENTIALS...
         </div>
       </div>
@@ -84,7 +84,7 @@ export default function AuthPage() {
           <motion.div
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2 rounded-full border border-[#00FF9C]/30 bg-black/60 px-4 py-2 text-[#00FF9C] text-xs font-mono tracking-widest backdrop-blur-md hover:border-[#00FF9C]/70 hover:shadow-[0_0_12px_rgba(0,255,156,0.35)] transition-all"
+            className="flex items-center gap-2 rounded-full border border-[#00FF9C]/30 bg-black/60 px-4 py-2 text-[#00FF9C] text-xs font-heading tracking-widest backdrop-blur-md hover:border-[#00FF9C]/70 hover:shadow-[0_0_12px_rgba(0,255,156,0.35)] transition-all"
           >
             <Home size={13} />
             HOME
@@ -123,3 +123,4 @@ export default function AuthPage() {
     </div>
   );
 }
+
