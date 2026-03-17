@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { Bell, Lock, Menu, X } from 'lucide-react';
 
-const navItems = ['Dashboard', 'Deepfake', 'ThreatGuard', 'Threats', 'Steganography', 'AI', 'Logs', 'News', 'Community', 'Users', 'Settings'];
+const BASE_NAV_ITEMS = ['Dashboard', 'Deepfake', 'ThreatGuard', 'Threats', 'Steganography', 'AI', 'Logs', 'News', 'Community', 'Settings'];
 
 export default function Navbar({ activePage, setActivePage, user, profile, onLogout }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -16,6 +16,9 @@ export default function Navbar({ activePage, setActivePage, user, profile, onLog
   };
 
   const currentRole = profile?.role || 'individual';
+  const accountType = profile?.accountType || 'individual';
+  const canSeeUsers = currentRole === 'admin' || currentRole === 'organizer' || accountType === 'organization';
+  const navItems = canSeeUsers ? [...BASE_NAV_ITEMS.slice(0, 9), 'Users', 'Settings'] : BASE_NAV_ITEMS;
 
   return (
     <header

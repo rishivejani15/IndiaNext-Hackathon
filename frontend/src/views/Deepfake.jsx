@@ -178,8 +178,8 @@ export default function Deepfake() {
         className="text-center"
       >
         <div className="flex items-center justify-center gap-3 mb-2">
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center border border-white/10"
-            style={{ background: 'rgba(255,255,255,0.03)' }}>
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center neon-border"
+            style={{ background: 'rgba(0,255,156,0.08)' }}>
             <ScanFace size={24} className="text-kavach-green" />
           </div>
           <h2 className="font-heading text-3xl font-extrabold text-white tracking-tight">DEEPFAKE DETECTION</h2>
@@ -204,6 +204,7 @@ export default function Deepfake() {
             onDrop={handleDrop}
             onClick={() => !file && fileInputRef.current.click()}
           >
+            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-kavach-green/50 to-transparent scan-effect opacity-30" />
             
             <AnimatePresence mode="wait">
               {!file ? (
@@ -219,9 +220,9 @@ export default function Deepfake() {
                       <UploadCloud size={32} className="text-gray-400 group-hover:text-kavach-green transition-colors" />
                     </div>
                     <motion.div 
-                      animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.3, 0.1] }}
+                      animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.5, 0.2] }}
                       transition={{ repeat: Infinity, duration: 2 }}
-                      className="absolute inset-0 rounded-full bg-white/10 blur-xl"
+                      className="absolute inset-0 rounded-full bg-kavach-green blur-xl"
                     />
                   </div>
                   
@@ -260,7 +261,7 @@ export default function Deepfake() {
                     >
                       <X size={16} />
                     </button>
-                    <div className="absolute inset-0 pointer-events-none border border-white/10 box-border rounded-xl" />
+                    <div className="absolute inset-0 pointer-events-none border-2 border-kavach-green/20 box-border rounded-xl" />
                   </div>
                   
                   <div className="text-center">

@@ -329,6 +329,7 @@ function ResultCard({ result, inputText, onNewScan, saveStatus, onSelectEngine, 
                   </div>
                 </div>
                 <div className="space-y-4">
+                  {/* Handle URL/Phishing Signals Array */}
                   {activeEngine.data?.signals?.length > 0 ? activeEngine.data.signals.map((sig, idx) => (
                     <motion.div key={idx} initial={{ x: 30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: idx * 0.07 }}
                       className="p-6 rounded-2xl bg-white/[0.04] border border-white/10">
@@ -337,6 +338,33 @@ function ResultCard({ result, inputText, onNewScan, saveStatus, onSelectEngine, 
                         <span className="text-[9px] font-mono text-white/40 border border-white/10 px-2 py-1 rounded">W: {(parseFloat(sig.weight) * 100).toFixed(0)}</span>
                       </div>
                       <p className="text-sm text-gray-300 font-mono leading-relaxed pl-4 border-l-2 border-white/10" style={{ wordBreak: 'break-word' }}>"{sig.detail}"</p>
+                    </motion.div>
+                  )) : 
+                  /* Handle Injection Details Object */
+                  activeEngine.data?.details && Object.keys(activeEngine.data.details).length > 0 ? Object.entries(activeEngine.data.details).map(([key, value], idx) => (
+                    <motion.div key={idx} initial={{ x: 30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: idx * 0.07 }}
+                      className="p-6 rounded-2xl bg-white/[0.04] border border-white/10">
+                      <div className="flex justify-between items-start gap-3 mb-2">
+                        <span className={`text-lg font-black uppercase ${activeEngine.color}`}>{key.replace(/_/g, ' ')}</span>
+                      </div>
+                      {typeof value === 'object' && value !== null ? (
+                         <div className="space-y-2 mt-3">
+                           {Object.entries(value).map(([subKey, subValue]) => (
+                             <div key={subKey} className="flex flex-col pl-4 border-l-2 border-white/10 mb-2">
+                               <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">{subKey.replace(/_/g, ' ')}</span>
+                               {Array.isArray(subValue) ? (
+                                  <ul className="list-disc pl-5 text-sm text-gray-300 font-mono">
+                                    {subValue.map((item, i) => <li key={i}>{String(item)}</li>)}
+                                  </ul>
+                               ) : (
+                                  <span className="text-sm text-gray-300 font-mono">{String(subValue)}</span>
+                               )}
+                             </div>
+                           ))}
+                         </div>
+                      ) : (
+                         <p className="text-sm text-gray-300 font-mono leading-relaxed pl-4 border-l-2 border-white/10" style={{ wordBreak: 'break-word' }}>{String(value)}</p>
+                      )}
                     </motion.div>
                   )) : (
                     <div className="flex items-center justify-center py-16 border border-dashed border-white/10 rounded-2xl opacity-20">

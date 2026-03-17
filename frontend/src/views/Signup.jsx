@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, User, Shield, ChevronDown, Chrome, UserPlus, AlertCircle } from 'lucide-react';
+import { Mail, Lock, User, Chrome, UserPlus, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Signup({ onSwitchToLogin }) {
-  const [role, setRole] = useState('individual');
-  const [accountType, setAccountType] = useState('individual');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +17,7 @@ export default function Signup({ onSwitchToLogin }) {
     try {
       setError('');
       setLoading(true);
-      await signup(email, password, name, role, accountType);
+      await signup(email, password, name);
       // Success will trigger App.jsx update via useAuth hook
     } catch (err) {
       setError('Registration Failed: Security protocols rejected credentials.');
@@ -95,35 +93,6 @@ export default function Signup({ onSwitchToLogin }) {
                     />
                   </div>
                 </div>
-
-                <div>
-                  <label className="block text-[10px] font-heading text-gray-500 uppercase tracking-[0.2em] mb-2 ml-1">
-                    Access Identity
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                      <Shield size={18} />
-                    </div>
-                    <select
-                      value={accountType}
-                      onChange={(e) => {
-                        setAccountType(e.target.value);
-                        // Map account type to role
-                        if (e.target.value === 'admin') setRole('organizer');
-                        else setRole(e.target.value);
-                      }}
-                      disabled={loading}
-                      className="w-full bg-black/40 border border-white/10 rounded-lg py-3 pl-10 pr-10 text-sm focus:border-neon/50 outline-none transition-all appearance-none font-medium cursor-pointer disabled:opacity-50"
-                    >
-                      <option value="individual" className="bg-neutral-900">Individual Agent</option>
-                      <option value="organization" className="bg-neutral-900">Organization</option>
-                      <option value="admin" className="bg-neutral-900">System Organizer (Admin)</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
-                      <ChevronDown size={18} />
-                    </div>
-                  </div>
-                </div>
               </div>
 
               <div className="space-y-5">
@@ -146,7 +115,11 @@ export default function Signup({ onSwitchToLogin }) {
                     />
                   </div>
                 </div>
+              </div>
+            </div>
 
+            <div className="flex justify-center">
+              <div className="w-full max-w-xs">
                 <div>
                   <label className="block text-[10px] font-heading text-gray-500 uppercase tracking-[0.2em] mb-2 ml-1">
                     Access Password

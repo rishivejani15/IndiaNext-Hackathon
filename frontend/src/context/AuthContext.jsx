@@ -7,10 +7,28 @@ import {
   signInWithPopup,
   updateProfile
 } from 'firebase/auth';
-import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { auth, googleProvider, db } from '../firebase';
 
 const AuthContext = createContext();
+
+function isProfileComplete(profile) {
+  if (!profile) return false;
+
+  const accountType = String(profile.accountType || '').toLowerCase();
+  if (accountType === 'individual') {
+    return Boolean(String(profile.profession || '').trim());
+  }
+
+  if (accountType === 'organization') {
+    const hasOrgName = Boolean(String(profile.organizationName || '').trim());
+    const hasOrgCode = Boolean(String(profile.organizationCode || '').trim());
+    const hasOrgMode = profile.organizationMode === 'create' || profile.organizationMode === 'join';
+    return hasOrgName && hasOrgCode && hasOrgMode;
+  }
+
+  return false;
+}
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -20,6 +38,7 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const profileUnsubRef = useRef(null);
 
   // Holds extraData (name, role, accountType) during signup so
   // onAuthStateChanged picks up the correct role — prevents race condition.
@@ -37,6 +56,11 @@ export function AuthProvider({ children }) {
         email: user.email,
         role: extraData.role || 'member',
         accountType: extraData.accountType || 'individual',
+        profession: extraData.profession || '',
+        organizationMode: extraData.organizationMode || null,
+        organizationName: extraData.organizationName || '',
+        organizationCode: extraData.organizationCode || '',
+        onboardingCompleted: false,
         provider: user.providerData?.[0]?.providerId ?? 'email',
         emailVerified: user.emailVerified,
         createdAt: serverTimestamp(),
@@ -52,6 +76,7 @@ export function AuthProvider({ children }) {
         ...existingData,
         email: user.email,
         emailVerified: user.emailVerified,
+        onboardingCompleted: isProfileComplete(existingData),
         lastLogin: serverTimestamp(),
         updatedAt: serverTimestamp(),
       };
@@ -60,7 +85,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  async function signup(email, password, name, role, accountType) {
+  async function signup(email, password, name, role = 'member', accountType = 'individual') {
     // Store pending profile data BEFORE creating user so onAuthStateChanged
     // picks it up immediately on the first fire — no race condition.
     pendingProfile.current = { name, role, accountType };
@@ -89,30 +114,64 @@ export function AuthProvider({ children }) {
   }
 
   async function googleLogin() {
-    const result = await signInWithPopup(auth, googleProvider);
-    await syncUserProfile(result.user);
-    return result;
+    try {
+      return await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      // COOP (Cross-Origin-Opener-Policy) errors: the popup closes and
+      // Firebase throws, but the user IS authenticated if Google auth completed.
+      // auth.currentUser will be set in that case — let onAuthStateChanged route them.
+      if (auth.currentUser) return;
+      throw err;
+    }
   }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
+
+      if (profileUnsubRef.current) {
+        profileUnsubRef.current();
+        profileUnsubRef.current = null;
+      }
+
       if (user) {
         // Grab pending signup extraData if available (prevents race condition)
         const extraData = pendingProfile.current ?? {};
         pendingProfile.current = null;
         await syncUserProfile(user, extraData);
+
+        // Keep profile reactive so onboarding completion reflects immediately.
+        profileUnsubRef.current = onSnapshot(doc(db, 'users', user.uid), (snap) => {
+          if (snap.exists()) {
+            setUserProfile(snap.data());
+          }
+        });
       } else {
         setUserProfile(null);
       }
       setLoading(false);
     });
-    return unsubscribe;
+
+    return () => {
+      if (profileUnsubRef.current) {
+        profileUnsubRef.current();
+        profileUnsubRef.current = null;
+      }
+      unsubscribe();
+    };
   }, []);
 
   const value = {
     currentUser,
     userProfile,
+    needsOnboarding:
+      !loading &&
+      currentUser &&
+      (
+        userProfile?.provider === 'google.com' ||
+        currentUser?.providerData?.some((provider) => provider.providerId === 'google.com')
+      ) &&
+      !isProfileComplete(userProfile),
     loading,
     signup,
     login,

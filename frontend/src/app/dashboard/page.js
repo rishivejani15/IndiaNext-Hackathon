@@ -61,16 +61,20 @@ const SettingsView = dynamic(() => import('../../views/Settings'), { ssr: false 
 
 export default function DashboardPage() {
   const [activePage, setActivePage] = useState('Dashboard');
-  const { currentUser, userProfile, logout, loading } = useAuth();
+  const { currentUser, userProfile, logout, loading, needsOnboarding } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (!loading && !currentUser) {
       router.push('/login');
+      return;
     }
-  }, [currentUser, loading, router]);
+    if (!loading && currentUser && needsOnboarding) {
+      router.push('/onboarding');
+    }
+  }, [currentUser, loading, needsOnboarding, router]);
 
-  if (loading || !currentUser) {
+  if (loading || !currentUser || needsOnboarding) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-[#00ff41] font-mono tracking-widest animate-pulse">

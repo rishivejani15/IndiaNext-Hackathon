@@ -43,7 +43,20 @@ function parseRSS(xmlStr, feedId) {
 
 // ─── Fetch one feed — tries multiple proxies ──────────────────────────────────
 async function fetchFeed(feed) {
-  // Strategy 1: allorigins.win (returns { contents: xmlString })
+  // Strategy 1: codetabs.com (returns raw XML)
+  try {
+    const res = await fetch(
+      `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(feed.url)}`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    if (res.ok) {
+      const xml = await res.text();
+      const items = parseRSS(xml, feed.id);
+      if (items.length > 0) return items;
+    }
+  } catch { /* fall through */ }
+
+  // Strategy 2: allorigins.win (returns { contents: xmlString })
   try {
     const res = await fetch(
       `https://api.allorigins.win/get?url=${encodeURIComponent(feed.url)}`,
@@ -52,19 +65,6 @@ async function fetchFeed(feed) {
     if (res.ok) {
       const json = await res.json();
       const items = parseRSS(json.contents, feed.id);
-      if (items.length > 0) return items;
-    }
-  } catch { /* fall through */ }
-
-  // Strategy 2: corsproxy.io (returns raw XML)
-  try {
-    const res = await fetch(
-      `https://corsproxy.io/?${encodeURIComponent(feed.url)}`,
-      { signal: AbortSignal.timeout(8000) }
-    );
-    if (res.ok) {
-      const xml = await res.text();
-      const items = parseRSS(xml, feed.id);
       if (items.length > 0) return items;
     }
   } catch { /* fall through */ }

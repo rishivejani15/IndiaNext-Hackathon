@@ -46,14 +46,14 @@ function MatrixRain() {
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
-  const { currentUser, loading } = useAuth();
+  const { currentUser, loading, needsOnboarding } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (!loading && currentUser) {
-      router.push('/dashboard');
+      router.push(needsOnboarding ? '/onboarding' : '/dashboard');
     }
-  }, [currentUser, loading, router]);
+  }, [currentUser, loading, needsOnboarding, router]);
 
   if (loading) {
     return (
