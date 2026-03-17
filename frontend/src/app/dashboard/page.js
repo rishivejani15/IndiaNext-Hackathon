@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from 'react';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
@@ -59,7 +60,17 @@ const CommunityView = dynamic(() => import('../../views/Community'), { ssr: fals
 const UsersView = dynamic(() => import('../../views/Users'), { ssr: false });
 const SettingsView = dynamic(() => import('../../views/Settings'), { ssr: false });
 
-export default function DashboardPage() {
+function DashboardLoadingScreen() {
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="text-[#00ff41] font-mono tracking-widest animate-pulse">
+        INITIALIZING SECURE CONNECTION...
+      </div>
+    </div>
+  );
+}
+
+function DashboardPageContent() {
   const [activePage, setActivePage] = useState('Dashboard');
   const { currentUser, userProfile, logout, loading, needsOnboarding } = useAuth();
   const router = useRouter();
@@ -116,13 +127,7 @@ export default function DashboardPage() {
   }, [activePage, searchParams, router]);
 
   if (loading || !currentUser || needsOnboarding) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-[#00ff41] font-mono tracking-widest animate-pulse">
-          INITIALIZING SECURE CONNECTION...
-        </div>
-      </div>
-    );
+    return <DashboardLoadingScreen />;
   }
 
   const renderActivePage = () => {
@@ -147,5 +152,13 @@ export default function DashboardPage() {
         {renderActivePage()}
       </main>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<DashboardLoadingScreen />}>
+      <DashboardPageContent />
+    </Suspense>
   );
 }
